@@ -13,6 +13,9 @@ var rouletteNumbers = ROULETTE_NUMBERS;
 // 一番初めの番号を表示する
 elementRouletteNumber.textContent = rouletteNumbers[0];
 
+// ルーレットでまわす数字がなくなった時のメッセージ
+const ERROR_CAN_NOT_ROULETTE = 'ルーレットでまわす数字がなくなりました';
+
 // ルーレットの文字を表示する
 var showRouletteNumbers = function(element, numbers) {
     var i = Math.floor(Math.random() * numbers.length);
@@ -24,6 +27,14 @@ var startRouletteNumbers = function() {
     timerId = setInterval(function() {
         showRouletteNumbers(elementRouletteNumber, rouletteNumbers);
     }, 10);    
+};
+
+// ルーレットをまわすことができるか
+var canRouletteNumbers = function(numbers) {
+    if (numbers.length > 0) {
+        return true;
+    }
+    return false;
 };
 
 // ルーレットのボタンを切り替える
@@ -66,10 +77,14 @@ var removeNumber = function(numbers, removeNumber) {
 }
 
 var startRoulette = function() {
-    // ルーレットを動かす
-    startRouletteNumbers();
-    // ボタンの切り替え
-    changeRouletteButton(true);
+    if (canRouletteNumbers(rouletteNumbers) === true) {
+        // ルーレットを動かす
+        startRouletteNumbers();
+        // ボタンの切り替え
+        changeRouletteButton(true);
+    } else {
+        alert(ERROR_CAN_NOT_ROULETTE);
+    }
 }
 
 // 新規のNodeを作成する
