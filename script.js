@@ -119,7 +119,8 @@ var stopRoulette = function() {
 
     // 中央の文字をリストの位置ヘ動かす
     rect = li.getBoundingClientRect();
-    animateNumber(div, rect.top - 20, rect.left + 15);
+    console.log(rect.top);
+    animateNumber(div, rect.top * 0.8, rect.left + 15);
 
     // ルーレットの候補から今回出た文字を削除
     removeNumber(rouletteNumbers, number);
@@ -156,7 +157,7 @@ var animateNumber = function(element, toTop, toLeft) {
 
         i++;
 
-        if (i >= 30) {
+        if (i >= 28) {
             element.remove();
             clearInterval(animateId);
             return;
