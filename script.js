@@ -5,10 +5,22 @@ var elementStartButton = document.querySelector('.start_button');
 var elementStopButton = document.querySelector('.stop_button');
 var timerId = null;
 
+// ルーレットの時のSE
+const SE_DRUMROLL = 'se/drumroll.mp3';
+
+// 数字が決定した時のSE
+const SE_DECISION_DRUMROLL = 'se/decision_drumroll.mp3';
+
 // エンターキーの文字コード
 const ENTER_KEY_CODE = 32;
 // ルーレットの候補を取得する
 var rouletteNumbers = ROULETTE_NUMBERS;
+
+// SEの読み込み
+var seDrum = new Audio();
+seDrum.src = SE_DRUMROLL;
+var seDecision = new Audio();
+seDecision.src = SE_DECISION_DRUMROLL;
 
 // 一番初めの番号を表示する
 elementRouletteNumber.textContent = rouletteNumbers[0];
@@ -24,6 +36,8 @@ var showRouletteNumbers = function(element, numbers) {
 
 // ルーレットを動かす
 var startRouletteNumbers = function() {
+    // ドラムロールを鳴らす
+    seDrum.play();
     timerId = setInterval(function() {
         showRouletteNumbers(elementRouletteNumber, rouletteNumbers);
     }, 10);    
@@ -63,6 +77,14 @@ var changeElementClass = function(element, className, isAdd) {
 
 // ルーレットをとめる
 var stopRouletteNumbers = function() {
+    // ドラムロールをとめる
+    seDrum.pause();
+    seDrum.currentTime = 0;
+
+    // 数字の決定音を鳴らす
+    seDecision.currentTime = 0;
+    seDecision.play();
+
     clearInterval(timerId);
 }
 
@@ -119,7 +141,6 @@ var stopRoulette = function() {
 
     // 中央の文字をリストの位置ヘ動かす
     rect = li.getBoundingClientRect();
-    console.log(rect.top);
     animateNumber(div, rect.top * 0.8, rect.left + 15);
 
     // ルーレットの候補から今回出た文字を削除
