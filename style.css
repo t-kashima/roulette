@@ -18,32 +18,38 @@ body {
 }
 
 .button {
-    width: 200px;
-    height: 40px;
+    width: 100px;
+    height: 30px;
     font-size: 14px;
     border-radius: 5px;
 }
 
 .roulette_button {
     text-align: center;
+    
 }
 
 ul.numbers {
     height: 240px;
     margin: 0px;
     padding: 0px;
+    margin: 150px 0px 200px;
 }
 
 li.number {
     list-style-type: none;
-    margin-right: 0.5em;
+    margin-right: 0.8em;
+    margin-bottom: 0.8em;
     font-size: 48px;
     font-weight: bold;
-    color: #ac6262;
     float: left;
     line-height: 1.2em;
     text-align: center;
     width: 65px;
+}
+
+li.dicision {
+    color: #ac6262;    
 }
 
 .clear {

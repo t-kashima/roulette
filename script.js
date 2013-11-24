@@ -1,5 +1,3 @@
-var elementWrapRouletteNumber = document.querySelector('.wrap_roulette_number');
-var elementRouletteNumber = document.querySelector('.roulette_number');
 var elementNumbers = document.querySelector('.numbers');
 var elementStartButton = document.querySelector('.start_button');
 var elementStopButton = document.querySelector('.stop_button');
@@ -13,8 +11,12 @@ const SE_DECISION_DRUMROLL = 'se/decision_drumroll.mp3';
 
 // エンターキーの文字コード
 const ENTER_KEY_CODE = 32;
+
+// いくつ数字を表示するか
+const ROULETTE_COUNT = 30;
+
 // ルーレットの候補を取得する
-var rouletteNumbers = ROULETTE_NUMBERS;
+var originalNumbers = ROULETTE_NUMBERS;
 
 // SEの読み込み
 var seDrum = new Audio();
@@ -23,10 +25,44 @@ var seDecision = new Audio();
 seDecision.src = SE_DECISION_DRUMROLL;
 
 // 一番初めの番号を表示する
-elementRouletteNumber.textContent = rouletteNumbers[0];
+const INIT_NUMBER = originalNumbers[0];
 
 // ルーレットでまわす数字がなくなった時のメッセージ
 const ERROR_CAN_NOT_ROULETTE = 'ルーレットでまわす数字がなくなりました';
+
+Array.prototype.shuffle = function() {
+    var a = this.slice();
+    for (var i = a.length - 1; i >= 0; i--) {
+        var r = Math.floor(i * Math.random());
+        var tmp = a[i];
+        a[i] = a[r];
+        a[r] = tmp;
+    };
+    return a;
+}
+
+// ルーレット後の数字
+var rouletteNumbers = originalNumbers;
+rouletteNumbers = rouletteNumbers.shuffle();
+
+// 新規のNodeを作成する
+var createNode = function(elementName, className) {
+    var e = document.createElement(elementName);
+    if (className != null) {
+        e.classList.add(className);
+    }
+    return e;
+};
+
+//  初期の数字を設定する
+var elementNumberLists = new Array();
+for (var i = 0; i < ROULETTE_COUNT; i++) {
+    var li = createNode('li', 'number');
+    li.textContent = INIT_NUMBER;
+    elementNumbers.appendChild(li);
+    elementNumberLists.push(li);
+}
+
 
 // ルーレットの文字を表示する
 var showRouletteNumbers = function(element, numbers) {
@@ -36,10 +72,19 @@ var showRouletteNumbers = function(element, numbers) {
 
 // ルーレットを動かす
 var startRouletteNumbers = function() {
+    // 既に数字が決定している時はまたリセットする
+    for (var i = 0; i < elementNumberLists.length; i++) {
+        var li = elementNumberLists[i];
+        changeElementClass(li, 'dicision', false);
+    }
+
     // ドラムロールを鳴らす
     seDrum.play();
     timerId = setInterval(function() {
-        showRouletteNumbers(elementRouletteNumber, rouletteNumbers);
+        for (var i = 0; i < elementNumberLists.length; i++) {
+            var element = elementNumberLists[i];
+            showRouletteNumbers(element, rouletteNumbers);
+        }
     }, 10);    
 };
 
@@ -109,81 +154,22 @@ var startRoulette = function() {
     }
 }
 
-// 新規のNodeを作成する
-var createNode = function(elementName, className) {
-    var e = document.createElement(elementName);
-    if (className != null) {
-        e.classList.add(className);
-    }
-    return e;
-};
-
 var stopRoulette = function() {
     // ルーレットをとめる
     stopRouletteNumbers();
-    // 止まった中央の文字を取得する
-    var number = elementRouletteNumber.textContent;    
-    
-    // 中央の文字と同じ文字をリストに追加する
-    var li = createNode('li', 'number');
-    li.textContent = number;
-    elementNumbers.appendChild(li);
 
-    // 動かす文字のために中央の文字を複製
-    var rect = elementRouletteNumber.getBoundingClientRect();
-    var div = createNode('div', 'move_number');
-    div.textContent = number;
-    div.style.position = 'absolute';
-    div.style.top =  rect.top + 'px';
-    div.style.left = rect.left + 'px';
-    div.style.fontSize = '320px';
-    elementWrapRouletteNumber.appendChild(div);
-
-    // 中央の文字をリストの位置ヘ動かす
-    rect = li.getBoundingClientRect();
-    animateNumber(div, rect.top * 0.8, rect.left + 15);
-
-    // ルーレットの候補から今回出た文字を削除
-    removeNumber(rouletteNumbers, number);
-    
-    // ボタンの表示を切り替え
-    changeRouletteButton(false);    
-}
-
-// 文字を移動させるためのアニメーション
-var animateNumber = function(element, toTop, toLeft) {
-    // 文字の現在の位置を取得する
-    var top = parseInt(element.style.top, 10);
-    var left = parseInt(element.style.left, 10);
-
-    // 1fps当たりの移動量を決定する
-    var incTop = (toTop - top) / 18;
-    var incLeft = (toLeft - left) / 28;
-    var incFontSize = -10;
-
-    var i = 0;
-
-    // 文字を移動させる
-    var animateId = setInterval(function() {
-        var top = parseInt(element.style.top, 10);
-        var left = parseInt(element.style.left, 10);
-        var fontSize = parseInt(element.style.fontSize, 10);
-        top += incTop;
-        left += incLeft;
-        fontSize += incFontSize;
-
-        element.style.top = top + 'px';
-        element.style.left = left + 'px';
-        element.style.fontSize = fontSize + 'px';
-
-        i++;
-
-        if (i >= 28) {
-            element.remove();
-            clearInterval(animateId);
-            return;
+    for (var i = 0; i < elementNumberLists.length; i++) {
+        var li = elementNumberLists[i];
+        // 表示する数字がなければ空白を入れる
+        if (typeof(rouletteNumbers[0]) === 'undefined') {
+            li.textContent = '';
+        } else {
+            li.textContent = rouletteNumbers[0];
+            removeNumber(rouletteNumbers, rouletteNumbers[0]);        
+            changeElementClass(li, 'dicision', true);
         }
-    }, 10);
+    }
+    changeRouletteButton(false);    
 }
 
 // キーボードを押した時
