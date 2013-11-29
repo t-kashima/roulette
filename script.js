@@ -25,7 +25,7 @@ var seDecision = new Audio();
 seDecision.src = SE_DECISION_DRUMROLL;
 
 // 一番初めの番号を表示する
-const INIT_NUMBER = originalNumbers[0];
+const INIT_NUMBER = '???';
 
 // ルーレットでまわす数字がなくなった時のメッセージ
 const ERROR_CAN_NOT_ROULETTE = 'ルーレットでまわす数字がなくなりました';
