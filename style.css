@@ -30,10 +30,9 @@ body {
 }
 
 ul.numbers {
-    height: 240px;
-    margin: 0px;
+    height: 440px;
     padding: 0px;
-    margin: 150px 0px 200px;
+    margin: 100px 0px 100px;
 }
 
 li.number {
@@ -45,7 +44,8 @@ li.number {
     float: left;
     line-height: 1.2em;
     text-align: center;
-    width: 65px;
+    width: 100px;
+    letter-spacing: -4px;
 }
 
 li.dicision {

@@ -164,6 +164,9 @@ var stopRoulette = function() {
     // ルーレットの数字をソートする
     dicisionNumbers.sort();    
 
+    console.log('---- result ----');
+    console.log(dicisionNumbers);
+
     for (var i = 0; i < ROULETTE_COUNT; i++) {
         var li = elementNumberLists[i];
         // 表示する数字がなければ空白を入れる
