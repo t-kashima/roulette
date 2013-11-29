@@ -39,7 +39,7 @@ Array.prototype.shuffle = function() {
         a[r] = tmp;
     };
     return a;
-}
+};
 
 // ルーレット後の数字
 var rouletteNumbers = originalNumbers;
@@ -158,14 +158,21 @@ var stopRoulette = function() {
     // ルーレットをとめる
     stopRouletteNumbers();
 
-    for (var i = 0; i < elementNumberLists.length; i++) {
+    // ルーレットで決まる指定数分だけ取得する
+    var dicisionNumbers = rouletteNumbers.splice(0, ROULETTE_COUNT);
+
+    // ルーレットの数字をソートする
+    dicisionNumbers.sort();    
+
+    for (var i = 0; i < ROULETTE_COUNT; i++) {
         var li = elementNumberLists[i];
         // 表示する数字がなければ空白を入れる
-        if (typeof(rouletteNumbers[0]) === 'undefined') {
+        if (typeof(dicisionNumbers[0]) === 'undefined') {
             li.textContent = '';
         } else {
-            li.textContent = rouletteNumbers[0];
-            removeNumber(rouletteNumbers, rouletteNumbers[0]);        
+            var dicisionNumber = dicisionNumbers.shift();
+            li.textContent = dicisionNumber;
+            // removeNumber(rouletteNumbers, rouletteNumbers[0]);        
             changeElementClass(li, 'dicision', true);
         }
     }
