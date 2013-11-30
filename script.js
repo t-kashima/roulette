@@ -13,7 +13,7 @@ const SE_DECISION_DRUMROLL = 'se/decision_drumroll.mp3';
 const ENTER_KEY_CODE = 32;
 
 // いくつ数字を表示するか
-const ROULETTE_COUNT = 30;
+const ROULETTE_COUNT = 20;
 
 // ルーレットの候補を取得する
 var originalNumbers = ROULETTE_NUMBERS;
